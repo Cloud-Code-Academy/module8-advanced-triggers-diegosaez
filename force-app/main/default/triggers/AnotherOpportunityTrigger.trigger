@@ -50,12 +50,12 @@ trigger AnotherOpportunityTrigger on Opportunity (before insert, after insert, b
             }
         } else if (Trigger.isUpdate){
             // Append Stage changes in Opportunity Description
+            
             for (Opportunity opp : Trigger.new){
-                for (Opportunity oldOpp : Trigger.old){
-                    if (opp.StageName != null){
-                        opp.Description += '\n Stage Change:' + opp.StageName + ':' + DateTime.now().format();
-                    }
-                }                
+                Opportunity oldOpp = idToOpportunity.get(opp.Id);
+                if (opp.StageName != null && opp.StageName != olddOpp.StageName) {
+                    opp.Description += '\n Stage Change:' + opp.StageName + ':' + DateTime.now().format();
+                }               
             }
             update Trigger.new;
         }
